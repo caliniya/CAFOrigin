@@ -10,6 +10,7 @@ public class DesktopLauncher{
         File location = new File(DesktopLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         File home = location.isFile() ? location.getParentFile() : new File(".");
         Fi data = new Fi(System.getProperty("caf.datadir", new File(home, "data").getPath()));
+        LagrangeNatives.load(data.file().toPath());
 
         SdlConfig config = new SdlConfig();
         config.title = "CAF";

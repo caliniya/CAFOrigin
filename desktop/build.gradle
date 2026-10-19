@@ -4,10 +4,26 @@ dependencies{
     runtimeOnly "com.github.caliniya.Arc:natives-desktop:$versions.arc"
     implementation "net.java.dev.jna:jna:$versions.jna"
     runtimeOnly "org.slf4j:slf4j-simple:$versions.slf4j"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 sourceSets.main.resources.srcDirs = [rootProject.file('assets')]
 def launcher = 'caliniya.caf.DesktopLauncher'
+def nativeFiles = rootProject.fileTree('natives'){
+    include '*/Lagrange.Core.NativeAPI.dll', '*/Lagrange.Core.NativeAPI.so', '*/Lagrange.Core.NativeAPI.dylib'
+}
+
+tasks.named('processResources'){
+    from(nativeFiles){ into 'natives' }
+    doFirst{
+        if(nativeFiles.isEmpty()){
+            throw new GradleException('No Lagrange native library found in natives/<platform>/. Build or download one first.')
+        }
+    }
+}
+
+tasks.named('test'){ useJUnitPlatform() }
 
 tasks.register('run', JavaExec){
     group = 'application'
@@ -33,15 +49,3 @@ tasks.register('dist', Jar){
 }
 
 tasks.named('assemble'){ dependsOn 'dist' }
-
-tasks.register('copyNatives', Copy){
-    group = 'distribution'
-    description = 'Copy existing Windows x64 Lagrange binaries beside the desktop JAR.'
-    from(rootProject.file('natives')){
-        include 'win-x64/Lagrange.Core.NativeAPI.dll'
-        //include 'win-x64/Lagrange.Core.NativeAPI.pdb'
-    }
-    into layout.buildDirectory.dir('output/natives')
-}
-
-tasks.named('dist'){ dependsOn 'copyNatives' }
