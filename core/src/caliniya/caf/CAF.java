@@ -3,7 +3,7 @@ package caliniya.caf;
 import arc.*;
 import arc.files.*;
 
-/** Shared application entry; agent logic and UI are intentionally left empty. */
+
 public class CAF extends ApplicationCore{
     private final Fi dataDirectory;
 

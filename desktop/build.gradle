@@ -33,3 +33,15 @@ tasks.register('dist', Jar){
 }
 
 tasks.named('assemble'){ dependsOn 'dist' }
+
+tasks.register('copyNatives', Copy){
+    group = 'distribution'
+    description = 'Copy existing Windows x64 Lagrange binaries beside the desktop JAR.'
+    from(rootProject.file('natives')){
+        include 'win-x64/Lagrange.Core.NativeAPI.dll'
+        //include 'win-x64/Lagrange.Core.NativeAPI.pdb'
+    }
+    into layout.buildDirectory.dir('output/natives')
+}
+
+tasks.named('dist'){ dependsOn 'copyNatives' }
