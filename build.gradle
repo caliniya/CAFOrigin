@@ -1,0 +1,54 @@
+plugins{
+    id 'base'
+    id 'eclipse'
+}
+
+ext{
+    appName = 'CAF'
+    versions = [arc: 'v1', jna: '5.19.1', websocket: '1.6.0', slf4j: '2.0.17']
+}
+
+allprojects{
+    apply plugin: 'eclipse'
+    group = 'caliniya'
+    version = '0.1.0'
+    repositories{
+        mavenCentral()
+    }
+    tasks.withType(JavaCompile).configureEach{ options.encoding = 'UTF-8' }
+}
+
+configure([project(':core'), project(':desktop')]){
+    apply plugin: 'java-library'
+    java{
+        toolchain.languageVersion = JavaLanguageVersion.of(17)
+        withSourcesJar()
+    }
+    sourceSets.main.java.srcDirs = ['src/']
+    sourceSets.test.java.srcDirs = ['test/']
+    tasks.withType(JavaCompile).configureEach{ options.release = 17 }
+    tasks.withType(Javadoc).configureEach{
+        options.encoding = 'UTF-8'
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+    tasks.withType(AbstractArchiveTask).configureEach{
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+    dependencyLocking{ lockAllConfigurations() }
+    eclipse.project.name = "$appName-${project.name}"
+}
+
+tasks.named('assemble'){ dependsOn ':core:assemble', ':desktop:assemble' }
+tasks.named('check'){ dependsOn ':core:check', ':desktop:check' }
+tasks.named('clean'){ dependsOn ':core:clean', ':desktop:clean' }
+
+tasks.register('dist'){
+    group = 'distribution'
+    dependsOn ':desktop:dist'
+}
+
+tasks.register('run'){
+    group = 'application'
+    dependsOn ':desktop:run'
+}

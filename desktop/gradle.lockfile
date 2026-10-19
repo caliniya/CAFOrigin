@@ -1,0 +1,13 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+net.java.dev.jna:jna:5.19.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.java-websocket:Java-WebSocket:1.6.0=runtimeClasspath,testRuntimeClasspath
+org.lwjgl:lwjgl-jemalloc:3.4.3=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.lwjgl:lwjgl-opengl:3.4.3=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.lwjgl:lwjgl-opengles:3.4.3=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.lwjgl:lwjgl-sdl:3.4.3=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.lwjgl:lwjgl:3.4.3=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.slf4j:slf4j-api:2.0.17=runtimeClasspath,testRuntimeClasspath
+org.slf4j:slf4j-simple:2.0.17=runtimeClasspath,testRuntimeClasspath
+empty=annotationProcessor,testAnnotationProcessor

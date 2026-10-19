@@ -1,0 +1,16 @@
+.gradle/
+.lwjgl/
+.arc/
+**/build/
+.idea/
+.settings/
+.classpath
+.project
+*.iml
+.vscode/
+local.properties
+.env
+.env.*
+/data/
+/logs/
+*.log

@@ -1,0 +1,35 @@
+dependencies{
+    implementation project(':core')
+    implementation "com.github.caliniya.Arc:backend-sdl3:$versions.arc"
+    runtimeOnly "com.github.caliniya.Arc:natives-desktop:$versions.arc"
+    implementation "net.java.dev.jna:jna:$versions.jna"
+    runtimeOnly "org.slf4j:slf4j-simple:$versions.slf4j"
+}
+
+sourceSets.main.resources.srcDirs = [rootProject.file('assets')]
+def launcher = 'caliniya.caf.DesktopLauncher'
+
+tasks.register('run', JavaExec){
+    group = 'application'
+    dependsOn classes
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = launcher
+    standardInput = System.in
+    workingDir rootProject.file('assets')
+    jvmArgs '-Dfile.encoding=UTF-8', "-Dcaf.datadir=${layout.buildDirectory.dir('run-data').get().asFile.absolutePath}"
+    if(System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('mac')) jvmArgs '-XstartOnFirstThread'
+}
+
+tasks.register('dist', Jar){
+    group = 'distribution'
+    dependsOn classes, configurations.runtimeClasspath
+    archiveFileName = "CAF-${project.version}.jar"
+    destinationDirectory = layout.buildDirectory.dir('output')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest.attributes('Main-Class': launcher, 'Multi-Release': 'true')
+    from(sourceSets.main.output)
+    from({ configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) } })
+    exclude 'META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA', 'META-INF/INDEX.LIST', '**/module-info.class'
+}
+
+tasks.named('assemble'){ dependsOn 'dist' }
