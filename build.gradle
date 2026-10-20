@@ -18,30 +18,33 @@ allprojects{
     tasks.withType(JavaCompile).configureEach{ options.encoding = 'UTF-8' }
 }
 
-configure([project(':core'), project(':desktop')]){
-    apply plugin: 'java-library'
-    java{
-        toolchain.languageVersion = JavaLanguageVersion.of(17)
-        withSourcesJar()
-    }
-    sourceSets.main.java.srcDirs = ['src/']
-    sourceSets.test.java.srcDirs = ['test/']
-    tasks.withType(JavaCompile).configureEach{ options.release = 17 }
-    tasks.withType(Javadoc).configureEach{
-        options.encoding = 'UTF-8'
-        options.addStringOption('Xdoclint:none', '-quiet')
+subprojects{
+    // Only Java modules opt into these conventions. The Android placeholder uses
+    // base today and can switch to com.android.application without a Java-plugin clash.
+    plugins.withId('java'){
+        java{
+            toolchain.languageVersion = JavaLanguageVersion.of(17)
+            withSourcesJar()
+        }
+        sourceSets.main.java.srcDirs = ['src/']
+        sourceSets.test.java.srcDirs = ['test/']
+        tasks.withType(JavaCompile).configureEach{ options.release = 17 }
+        tasks.withType(Javadoc).configureEach{
+            options.encoding = 'UTF-8'
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+        dependencyLocking{ lockAllConfigurations() }
     }
     tasks.withType(AbstractArchiveTask).configureEach{
         preserveFileTimestamps = false
         reproducibleFileOrder = true
     }
-    dependencyLocking{ lockAllConfigurations() }
     eclipse.project.name = "$appName-${project.name}"
 }
 
-tasks.named('assemble'){ dependsOn ':core:assemble', ':desktop:assemble' }
-tasks.named('check'){ dependsOn ':core:check', ':desktop:check' }
-tasks.named('clean'){ dependsOn ':core:clean', ':desktop:clean' }
+tasks.named('assemble'){ dependsOn subprojects.collect{ "${it.path}:assemble" } }
+tasks.named('check'){ dependsOn subprojects.collect{ "${it.path}:check" } }
+tasks.named('clean'){ dependsOn subprojects.collect{ "${it.path}:clean" } }
 
 tasks.register('dist'){
     group = 'distribution'

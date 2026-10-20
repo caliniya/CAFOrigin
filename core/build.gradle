@@ -1,5 +1,15 @@
+plugins{
+    id 'java-library'
+}
+
 dependencies{
     api "com.github.caliniya.Arc:arc-core:$versions.arc"
+    // Shared C ABI declarations use JNA types; only platform modules load Lagrange.
+    api "net.java.dev.jna:jna:$versions.jna"
     implementation "org.java-websocket:Java-WebSocket:$versions.websocket"
     implementation "org.slf4j:slf4j-api:$versions.slf4j"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+tasks.named('test'){ useJUnitPlatform() }

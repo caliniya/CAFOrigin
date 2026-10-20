@@ -10,7 +10,7 @@ public class DesktopLauncher{
         File location = new File(DesktopLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         File home = location.isFile() ? location.getParentFile() : new File(".");
         Fi data = new Fi(System.getProperty("caf.datadir", new File(home, "data").getPath()));
-        LagrangeNatives.load(data.file().toPath());
+        DesktopPlatform platform = DesktopPlatform.load(data);
 
         SdlConfig config = new SdlConfig();
         config.title = "CAF";
@@ -18,6 +18,6 @@ public class DesktopLauncher{
         config.appIdentifier = "caliniya.caf";
         config.width = 1000;
         config.height = 700;
-        new SdlApplication(new CAF(data), config);
+        new SdlApplication(new CAF(platform), config);
     }
 }

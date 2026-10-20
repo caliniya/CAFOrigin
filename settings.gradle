@@ -1,5 +1,5 @@
 rootProject.name = 'CAF'
-include 'core', 'desktop'
+include 'core', 'desktop', 'android'
 
 if(!file('arc/settings.gradle.kts').isFile()){
     throw new GradleException('Run git submodule update --init --recursive first.')

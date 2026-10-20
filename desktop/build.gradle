@@ -1,8 +1,11 @@
+plugins{
+    id 'java-library'
+}
+
 dependencies{
     implementation project(':core')
     implementation "com.github.caliniya.Arc:backend-sdl3:$versions.arc"
     runtimeOnly "com.github.caliniya.Arc:natives-desktop:$versions.arc"
-    implementation "net.java.dev.jna:jna:$versions.jna"
     runtimeOnly "org.slf4j:slf4j-simple:$versions.slf4j"
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -11,14 +14,14 @@ dependencies{
 sourceSets.main.resources.srcDirs = [rootProject.file('assets')]
 def launcher = 'caliniya.caf.DesktopLauncher'
 def nativeFiles = rootProject.fileTree('natives'){
-    include '*/Lagrange.Core.NativeAPI.dll', '*/Lagrange.Core.NativeAPI.so', '*/Lagrange.Core.NativeAPI.dylib'
+    include 'win-*/Lagrange.Core.NativeAPI.dll', 'linux-*/Lagrange.Core.NativeAPI.so', 'osx-*/Lagrange.Core.NativeAPI.dylib'
 }
 
 tasks.named('processResources'){
     from(nativeFiles){ into 'natives' }
     doFirst{
         if(nativeFiles.isEmpty()){
-            throw new GradleException('No Lagrange native library found in natives/<platform>/. Build or download one first.')
+            throw new GradleException('No desktop Lagrange native library found in natives/<platform>/. Build or download one first.')
         }
     }
 }

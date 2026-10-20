@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BuildAndRun" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/desktop/build/output/CAF-0.1.0.jar" />
+    <option name="WORKING_DIRECTORY" value="D:\project\CAF" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2" />
+  </configuration>
+</component>
